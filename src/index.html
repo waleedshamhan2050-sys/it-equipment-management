@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة معدات تكنولوجيا المعلومات</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- رأس الصفحة -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <span class="logo-icon">⚙️</span>
+                    نظام إدارة معدات IT
+                </h1>
+                <p class="tagline">إدارة فعّالة للأجهزة والصيانة والتحديثات</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- الشريط الجانبي للملاحة -->
+    <nav class="sidebar">
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-link active" data-section="dashboard">📊 لوحة التحكم</a></li>
+            <li><a href="#" class="nav-link" data-section="devices">💻 المعدات</a></li>
+            <li><a href="#" class="nav-link" data-section="maintenance">🔧 طلبات الصيانة</a></li>
+            <li><a href="#" class="nav-link" data-section="status">📈 حالة النظام</a></li>
+            <li><a href="#" class="nav-link" data-section="reports">📋 التقارير</a></li>
+        </ul>
+    </nav>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+        <div class="container">
+            <!-- قسم لوحة التحكم -->
+            <section id="dashboard" class="section active">
+                <h2>لوحة التحكم</h2>
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💻</div>
+                        <div class="stat-info">
+                            <p class="stat-label">إجمالي المعدات</p>
+                            <p class="stat-value" id="total-devices">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <p class="stat-label">معدات نشطة</p>
+                            <p class="stat-value" id="active-devices">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-info">
+                            <p class="stat-label">معدات معطلة</p>
+                            <p class="stat-value" id="inactive-devices">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔧</div>
+                        <div class="stat-info">
+                            <p class="stat-label">طلبات الصيانة</p>
+                            <p class="stat-value" id="maintenance-count">0</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم المعدات -->
+            <section id="devices" class="section">
+                <div class="section-header">
+                    <h2>إدارة المعدات</h2>
+                    <button class="btn btn-primary" id="add-device-btn">+ إضافة معدة جديدة</button>
+                </div>
+
+                <!-- نموذج إضافة معدة جديدة -->
+                <div id="add-device-form" class="modal hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>إضافة معدة جديدة</h3>
+                            <button class="close-btn" id="close-device-form">&times;</button>
+                        </div>
+                        <form id="device-form" class="form">
+                            <div class="form-group">
+                                <label for="device-name">اسم المعدة:</label>
+                                <input type="text" id="device-name" required placeholder="مثال: جهاز كمبيوتر مكتب">
+                            </div>
+                            <div class="form-group">
+                                <label for="device-type">نوع المعدة:</label>
+                                <select id="device-type" required>
+                                    <option value="">اختر النوع</option>
+                                    <option value="laptop">جهاز محمول (Laptop)</option>
+                                    <option value="desktop">جهاز مكتب (Desktop)</option>
+                                    <option value="printer">طابعة</option>
+                                    <option value="router">موجه شبكة (Router)</option>
+                                    <option value="server">خادم (Server)</option>
+                                    <option value="monitor">شاشة</option>
+                                    <option value="other">أخرى</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="device-serial">الرقم التسلسلي:</label>
+                                <input type="text" id="device-serial" required placeholder="مثال: SN123456">
+                            </div>
+                            <div class="form-group">
+                                <label for="device-location">الموقع:</label>
+                                <input type="text" id="device-location" required placeholder="مثال: المكتب الأول - الطابق الثاني">
+                            </div>
+                            <div class="form-group">
+                                <label for="device-purchase-date">تاريخ الشراء:</label>
+                                <input type="date" id="device-purchase-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="device-status">الحالة:</label>
+                                <select id="device-status" required>
+                                    <option value="active">نشطة</option>
+                                    <option value="inactive">معطلة</option>
+                                    <option value="maintenance">تحت الصيانة</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">حفظ</button>
+                                <button type="button" class="btn btn-secondary" id="cancel-device-form">إلغاء</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- جدول المعدات -->
+                <div class="table-container">
+                    <table id="devices-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>اسم المعدة</th>
+                                <th>النوع</th>
+                                <th>الرقم التسلسلي</th>
+                                <th>الموقع</th>
+                                <th>تاريخ الشراء</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="devices-tbody">
+                            <!-- سيتم ملء البيانات من خلال JavaScript -->
+                        </tbody>
+                    </table>
+                    <p id="no-devices-msg" class="empty-state">لا توجد معدات مسجلة حالياً</p>
+                </div>
+            </section>
+
+            <!-- قسم طلبات الصيانة -->
+            <section id="maintenance" class="section">
+                <div class="section-header">
+                    <h2>طلبات الصيانة</h2>
+                    <button class="btn btn-primary" id="add-maintenance-btn">+ إضافة طلب صيانة</button>
+                </div>
+
+                <!-- نموذج إضافة طلب صيانة -->
+                <div id="add-maintenance-form" class="modal hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>إضافة طلب صيانة جديد</h3>
+                            <button class="close-btn" id="close-maintenance-form">&times;</button>
+                        </div>
+                        <form id="maintenance-form" class="form">
+                            <div class="form-group">
+                                <label for="maintenance-device">اختر المعدة:</label>
+                                <select id="maintenance-device" required>
+                                    <option value="">اختر المعدة</option>
+                                    <!-- سيتم ملء الخيارات من قائمة المعدات -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="maintenance-type">نوع الصيانة:</label>
+                                <select id="maintenance-type" required>
+                                    <option value="">اختر النوع</option>
+                                    <option value="preventive">وقائية</option>
+                                    <option value="corrective">إصلاحية</option>
+                                    <option value="emergency">طارئة</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="maintenance-description">الوصف:</label>
+                                <textarea id="maintenance-description" required placeholder="وصف المشكلة أو الصيانة المطلوبة"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="maintenance-priority">الأولوية:</label>
+                                <select id="maintenance-priority" required>
+                                    <option value="low">منخفضة</option>
+                                    <option value="medium">متوسطة</option>
+                                    <option value="high">عالية</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="maintenance-date">تاريخ الطلب:</label>
+                                <input type="date" id="maintenance-date" required>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">حفظ</button>
+                                <button type="button" class="btn btn-secondary" id="cancel-maintenance-form">إلغاء</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- جدول طلبات الصيانة -->
+                <div class="table-container">
+                    <table id="maintenance-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>المعدة</th>
+                                <th>النوع</th>
+                                <th>الوصف</th>
+                                <th>الأولوية</th>
+                                <th>التاريخ</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="maintenance-tbody">
+                            <!-- سيتم ملء البيانات من خلال JavaScript -->
+                        </tbody>
+                    </table>
+                    <p id="no-maintenance-msg" class="empty-state">لا توجد طلبات صيانة حالياً</p>
+                </div>
+            </section>
+
+            <!-- قسم حالة النظام -->
+            <section id="status" class="section">
+                <h2>حالة النظام</h2>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <h3>توزيع أنواع المعدات</h3>
+                        <div id="device-types-chart" class="chart-placeholder">
+                            <canvas id="device-types-canvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="status-card">
+                        <h3>حالة المعدات</h3>
+                        <div id="device-status-chart" class="chart-placeholder">
+                            <canvas id="device-status-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قائمة حالة المعدات -->
+                <div class="status-list">
+                    <h3>تفاصيل حالة المعدات</h3>
+                    <div id="status-details" class="status-details-container">
+                        <!-- سيتم ملء البيانات من خلال JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم التقارير -->
+            <section id="reports" class="section">
+                <h2>التقارير</h2>
+                <div class="reports-container">
+                    <div class="report-card">
+                        <h3>تقرير المعدات</h3>
+                        <p>تقرير شامل عن جميع المعدات المسجلة في النظام</p>
+                        <button class="btn btn-primary" id="export-devices-btn">تصدير التقرير</button>
+                    </div>
+                    <div class="report-card">
+                        <h3>تقرير الصيانة</h3>
+                        <p>تقرير عن جميع طلبات الصيانة والمشاكل المسجلة</p>
+                        <button class="btn btn-primary" id="export-maintenance-btn">تصدير التقرير</button>
+                    </div>
+                    <div class="report-card">
+                        <h3>تقرير الأداء</h3>
+                        <p>تقرير عن أداء النظام والمعدات</p>
+                        <button class="btn btn-primary" id="export-performance-btn">تصدير التقرير</button>
+                    </div>
+                </div>
+
+                <!-- منطقة عرض التقارير -->
+                <div id="reports-output" class="reports-output hidden">
+                    <div class="report-header">
+                        <h3 id="report-title">التقرير</h3>
+                        <button class="btn btn-secondary" id="print-report-btn">طباعة</button>
+                        <button class="btn btn-secondary" id="close-report-btn">إغلاق</button>
+                    </div>
+                    <div id="report-content" class="report-content">
+                        <!-- سيتم ملء محتوى التقرير هنا -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- تذييل الصفحة -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 نظام إدارة معدات تكنولوجيا المعلومات | مشروع طلاب السنة الثانية</p>
+        </div>
+    </footer>
+
+    <!-- استيراد ملف JavaScript الرئيسي -->
+    <script src="app.js"></script>
+</body>
+</html>
